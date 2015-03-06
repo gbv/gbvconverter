@@ -1,0 +1,7 @@
+#!/usr/bin/make -f
+%:
+	dh  $@
+
+# don't modify postinst/postrm/prerm
+override_dh_installinit:
+	dh_installinit --noscripts

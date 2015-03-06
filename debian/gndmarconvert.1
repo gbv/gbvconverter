@@ -1,0 +1,66 @@
+.TH "GNDMARCONVERT" "1" "" "Manual" ""
+.SH NAME
+.PP
+gndmarconvert \- MARCXML GND authority record conversion webservice
+.SH DESCRIPTION
+.PP
+\f[B]gndmarconvert\f[] provides a webservice to convert MARCXML
+authority records of GND.
+.SH SYNOPSIS
+.PP
+The application is automatically started as service, listening on port
+6100.
+.IP
+.nf
+\f[C]
+sudo\ service\ gndmarconvert\ {status|start|stop|restart}
+\f[]
+.fi
+.PP
+The main page on <http://localhost:6100/> provides API documentation.
+.SH INSTALLATION
+.PP
+The application is packaged as Debian package.
+No binaries are included, so the package should work on all
+architectures.
+It is tested with Ubuntu 12.04 LTS.
+.PP
+Files are installed at the following locations:
+.IP \[bu] 2
+\f[C]/srv/gndmarconvert/\f[] \- application
+.IP \[bu] 2
+\f[C]/var/log/gndmarconvert/\f[] \- log files
+.IP \[bu] 2
+\f[C]/etc/default/gndmarconvert\f[] \- server configuration
+.IP \[bu] 2
+\f[C]/etc/gndmarconvert\f[] \- application configuration
+.SH CONFIGURATION
+.PP
+See \f[C]/etc/default/gndmarconvert\f[] for basic configuration.
+Settings are not modified by updates.
+Restart is needed after changes.
+Only simple key value\-pairs are allowed with the following keys:
+.IP \[bu] 2
+\f[C]PORT\f[] \- port number (required, 6100 by default)
+.IP \[bu] 2
+\f[C]WORKERS\f[] \- number of parallel connections (required, 5 by
+default).
+If put behind a HTTP proxy, this number is not affected by slow cient
+connections but only by the time of processing each request.
+.IP \[bu] 2
+\f[C]PROXY\f[] \- optional space\-or\-comma\-separated list of trusted
+IPs or IP\-ranges (e.g.
+\f[C]192.168.0.0/16\f[]) to take from the \f[C]X\-Forwarded\-For\f[]
+header.
+The special value \f[C]*\f[] can be used to trust all IPs.
+.PP
+The HTML client can be customized by putting static files into directory
+\f[C]/etc/gndmarconvert/htdocs\f[] to override files in
+\f[C]/srv/gndmarconvert/htdocs\f[].
+.SH SEE ALSO
+.PP
+Changelog is located in \f[C]debian/changelog\f[] in the source code
+repository.
+.PP
+Source code and issue tracker at <https://github.com/gbv/gndmarconvert>.
+See file \f[C]CONTRIBUTING.md\f[] for details.

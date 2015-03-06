@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GNDMARConvert</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript">
+        angular.module('GNDMARConvert',['ui.bootstrap'])
+        .controller('MainController',function($scope) {
+            $scope.baseURL = window.location.href.split('?')[0].split('#')[0];
+            $scope.outputtype = "application/json";
+        });
+    </script>
+    <style type="text/css">
+      .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+      code { color: #000; background: none; padding: 0; }
+      code.param { color: #5cb85c }
+      code.param-optional { color: #666 }
+      .footer { padding-top: 2em; color: #666; }
+    </style>
+  </head>
+  <body ng-app="GNDMARConvert" ng-controller="MainController">
+    <div class="container">
+      <div class="page-header">
+        <h1>GNDMARConvert</h1>
+        <p class="lead">MARCXML GND authority record conversion webservice</p>
+      </div>
+      <div>
+
+        <h2>REST API</h2>
+        <p>
+          The REST API of this webserice can be used to convert
+          <a href="http://www.loc.gov/standards/marcxml/">MARCXML</a>
+          records with GND data (as documented
+          <a href="http://www.dnb.de/DE/Standardisierung/Formate/MARC21/marc21_node.html">at DNB</a>
+          and <a href="http://www.loc.gov/marc/authority/">at LoC</a>.
+        </p>
+
+        <h3>List supported formats</h3>
+        <p>
+          The <code><a href="formats">formats</a></code>
+          endpoint returns a list of supported formats as JSON object.
+        </p>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div style="word-break: break-all">
+              <span class="badge">GET</span>
+              <code>{{baseURL}}formats</code>
+            </div>
+          </div>
+        </div>
+
+        <h3>Conversion</h3>
+        <p>
+          The <code><a href="convert">convert</a></code>
+          endpoint expects a HTTP POST request with file upload.
+        </p>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div style="word-break: break-all">
+              <span class="badge">POST</span>
+              <code>{{baseURL}}convert</code
+              ><!--?<code class="param-optional">input=upload</code
+              >&amp;<code class="param-optional">inputformat=marcxml</code
+              >&amp;<code class="param-optional">outputformat=json</code-->
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">Parameters</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <b>input</b><br>optional
+                </td>
+                <td>
+                  Set the method of uploading the input file.
+                </td>
+                <td>
+                  <code>upload</code> (default)
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b>inputformat</b><br>optional
+                </td>
+                <td>
+                  The format of the input file. Guessed from
+                  MIME type and file extension unless specified.
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b>outputformat</b><br>optional
+                </td>
+                <td>
+                  The format the file should be converted to.
+                  Guessed from HTTP Accept header unless specified.
+                </td>
+                <td>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The output filename is constructed by replacing the file extension of
+          input file with file extension of output format.
+        </p>
+
+        <h3>Code Snippets</h3>
+        <tabset>
+          <tab heading="cURL/Bash">
+            <pre>
+<code>curl -L "{{baseURL}}convert"
+     -F file=@input.xml
+     <span ng-if="outputtype">-H Accept:{{outputtype}}</span>
+     -O -J</code></pre>
+          </tab>
+        </tabset>
+      </div>
+      <div class="footer">
+        <p>inspired by <a href="https://cloudconvert.com/apiconsole">cloudconvert API</a>
+      </div>
+    </div>
+  </body>
+</html>

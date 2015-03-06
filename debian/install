@@ -1,0 +1,6 @@
+app.psgi            srv/seealso
+lib/*               srv/seealso/lib
+cpanfile            srv/seealso
+cpanfile.snapshot   srv/seealso
+local/*             srv/seealso/local
+htdocs/*            srv/seealso/htdocs

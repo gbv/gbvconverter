@@ -1,0 +1,8 @@
+#!/bin/sh
+
+PACKAGE="$DPKG_MAINTSCRIPT_PACKAGE"
+
+# stop service
+service $PACKAGE stop
+
+exit 0
