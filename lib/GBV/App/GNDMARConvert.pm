@@ -125,9 +125,13 @@ sub convert {
     return [ 200, \@headers, $result ];
 }
 
+## TODO: more conversions
+use GBV::App::GNDMARConvert::Mapping;
 sub perform_convert {
-    my ($file, $input, $output) = @_;
-    return "...";
+    my ($self, $file, $input, $output) = @_;
+    my $filename = $file->tempname;
+    my $json = marc_file_to_json($filename);
+    return [ JSON->new->pretty->utf8->encode($json) ];
 }
 
 sub guess_format {
