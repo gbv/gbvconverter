@@ -17,7 +17,8 @@
         angular.module('GNDMARConvert',['ui.bootstrap'])
         .controller('MainController',function($scope) {
             $scope.baseURL = window.location.href.split('?')[0].split('#')[0];
-            $scope.outputtype = "application/json";
+            //$scope.outputtype = "application/json";
+            $scope.to = "json-ld";
         });
     </script>
     <style type="text/css">
@@ -70,8 +71,8 @@
               <span class="badge">POST</span>
               <code>{{baseURL}}convert</code
               ><!--?<code class="param-optional">input=upload</code
-              >&amp;<code class="param-optional">inputformat=marcxml</code
-              >&amp;<code class="param-optional">outputformat=json</code-->
+              >&amp;<code class="param-optional">from=marcxml</code
+              >&amp;<code class="param-optional">to=json</code-->
             </div>
           </div>
         </div>
@@ -101,7 +102,7 @@
               </tr>
               <tr>
                 <td>
-                  <b>inputformat</b><br>optional
+                  <b>from</b><br>optional
                 </td>
                 <td>
                   The format of the input file. Guessed from
@@ -112,7 +113,7 @@
               </tr>
               <tr>
                 <td>
-                  <b>outputformat</b><br>optional
+                  <b>to</b><br>optional
                 </td>
                 <td>
                   The format the file should be converted to.
@@ -136,11 +137,13 @@
             <pre>
 <code>curl -L "{{baseURL}}convert"
      -F file=@input.xml
-     <span ng-if="outputtype">-H Accept:{{outputtype}}</span>
+     <span ng-if="outputtype">-H Accept:{{outputtype}}</span
+     ><span ng-if="to">-F to={{to}}</span>
      -O -J</code></pre>
           </tab>
         </tabset>
       </div>
+
       <div class="footer">
         <p>inspired by <a href="https://cloudconvert.com/apiconsole">cloudconvert API</a>
       </div>
