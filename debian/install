@@ -1,4 +1,5 @@
 app.psgi            srv/gndmarconvert
+formats.json        srv/gndmarconvert
 lib/*               srv/gndmarconvert/lib
 cpanfile            srv/gndmarconvert
 cpanfile.snapshot   srv/gndmarconvert

@@ -5,6 +5,7 @@ use parent 'Plack::Component';
 
 use Plack::Builder;
 use Plack::Request;
+use Plack::Util;
 use Plack::Util::Accessor qw(formats);
 use JSON;
 use Storable qw(dclone);
@@ -16,9 +17,16 @@ sub prepare_app {
     $self->{conversions} = { };
     foreach (keys %{$self->{formats}}) {
         $self->{formats}->{$_}->{name} = $_;
-        if ( my $target = delete $self->{formats}->{$_}->{targets} ) {
+        if ( my $target = delete $self->{formats}->{$_}->{target} ) {
             $self->{conversions}->{$_} = $target;
-            $self->{formats}->{$_}->{targets} = keys [ %$target ];
+            $self->{formats}->{$_}->{target} = keys [ %$target ];
+
+            #$conversion = eval {
+            while (my($key,$value) = each %$target) {
+                Plack::Util::load_class($value);
+                no strict 'refs';
+                $target->{$key} = \&{$value."::convert"};
+            }
         }
     }
 
@@ -83,7 +91,6 @@ sub convert {
     my $from = $format{input}->{name};
     my $to   = $format{output}->{name};
 
-    print "FROM: $from\n";
     if ( !$self->{conversions}->{$from} ) {
         return [ 400, [], ["Invalid input format"] ];
     }
@@ -100,7 +107,8 @@ sub convert {
     push @headers, 'Content-Disposition' => "attachment; filename=\"$outputfile\"";
  
     push @headers, 'Content-Type' => $format{output}->{type};
-    return [ 200, \@headers, $conversion->( $file ) ];
+    my $files = { $file->filename => $file->path };
+    return [ 200, \@headers, $conversion->( $files ) ];
 }
 
 sub guess_format {
@@ -132,12 +140,12 @@ __END__
 
   my $app = Plack::App::Convert->new( formats => $formats );
 
-=head1 METHODS
+=head1 DESCRIPTION
 
-=head2 convert
+Provides a web API to convert data via HTTP POST requests.
 
-=head2 guess_format
-
-=head2 call
+A converter is a code reference to transform a hash with original filenames to
+local files into a PSGI body
+(L<https://metacpan.org/pod/distribution/PSGI/PSGI.pod#Body>).
 
 =cut

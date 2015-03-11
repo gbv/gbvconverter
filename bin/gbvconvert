@@ -1,0 +1,102 @@
+#!/usr/bin/perl
+use v5.14.1;
+
+our $dir;
+BEGIN {
+    use Cwd 'abs_path';
+    $dir = abs_path($0);
+    $dir =~ s{[^/]+$}{..};
+
+    unless( -d "$dir/lib" and -d "$dir/dir/lib/perl5" ) { 
+        if ( -d "/srv/gndaccess/lib" and -d "/srv/gndaccess/dir/lib/perl5" ) {
+            $dir = "/srv/gndaccess";
+        }
+    }
+    
+    unshift @INC, "$dir/lib", "$dir/dir/lib/perl5";
+}    
+
+use JSON;
+my $FORMATS = do { 
+    local (@ARGV, $/) = ("$dir/formats.json");
+    JSON->new->decode(<>);
+};
+$FORMATS->{$_}->{name} = $_ for keys %$FORMATS;
+
+
+use Plack::Util;
+use Pod::Usage qw(pod2usage);
+use Getopt::Long;
+
+my %opt;
+my ($outputformat, $help);
+GetOptions(\%opt, 
+    "from|f=s",
+    "to|t=s",
+    "formats|m",
+    "help|?" 
+) || pod2usage(-verbose => 0);
+pod2usage(-verbose => 1) if $opt{help};
+
+if ($opt{formats}) {
+    # TODO: nicer output, load description from files
+    print JSON->new->pretty->encode($FORMATS);
+    exit;
+}
+
+my $from = $FORMATS->{$opt{from}};
+my $to   = $FORMATS->{$opt{to}};
+
+error("Unknown input format!") if !$from;
+error("Unknown output format!") if !$to;
+
+my $conversion = $from->{target}->{$opt{to}};
+error("Unsupported output format!") if !$conversion;
+
+# load Perl module for conversion
+$conversion = eval {
+    Plack::Util::load_class($conversion);
+    no strict 'refs';
+    \&{$conversion."::convert"};
+};
+if ( (ref $conversion // '') ne 'CODE') {
+    error("Failed to load conversion! $@" => 2);
+}
+
+
+if (@ARGV) {
+    transform($_) for @ARGV;
+} else {
+    transform(*STDIN);
+}
+
+sub transform {
+    my $file = shift;
+    my $res = $conversion->( { file => $file } );
+#    binmode *STDOUT, ':utf8';
+    Plack::Util::foreach( $res, sub { print shift } );
+}
+
+sub error {
+    say STDERR $_[0];
+    exit $_[1] // 1;
+}
+
+__END__
+
+=head1 NAME
+
+gbvconvert - GBV file conversion utility
+
+=head1 SYNOPSIS
+
+gbvconvert [options] [files...]
+
+ Options:
+   --help -h -?  show this help message
+   --from NAME   input format
+   --to NAME     output format
+   --formats|m   list formats
+
+=cut
+

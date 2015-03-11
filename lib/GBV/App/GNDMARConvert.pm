@@ -7,48 +7,7 @@ our $NAME="gndmarconvert";
 use parent 'Plack::App::Converter';
 
 use Plack::Builder;
-
-## TODO: more conversions
-use File::Temp qw(tempfile);
-use GBV::App::GNDMARConvert::Mapping;
-###
-
-my $FORMATS = {
-    marcxml => { 
-        type => 'application/marcxml+xml',
-        title => 'MARCXML',
-        docs => 'http://www.loc.gov/standards/marcxml/',
-        extension => 'xml',
-        targets => {
-            json => \&marcxml2json,
-            'json-ld' => \&marcxml2jsonld,
-        }
-    },
-    json => {
-        type => 'application/json',
-        title => 'JSON',
-        extension => 'json',
-    },
-    'json-ld' => {
-        type => 'application/ld+json',
-        title => 'JSON-LD',
-        extension => 'json'
-    },
-};
-
-sub marcxml2json {
-    my ($input) = @_; # Plack::Request::Upload
-    my $filename = $input->tempname;
-    my $json = marc_file_to_json($filename);
-    # $fh = tempfile();
-    return [ JSON->new->pretty->utf8->encode($json) ];
-}
-
-sub marcxml2jsonld {
-    my ($input) = @_; # Plack::Request::Upload
-    # ...
-    return [ "" ]
-}
+use JSON;
 
 sub prepare_app {
     my ($self) = @_;
@@ -66,6 +25,12 @@ sub prepare_app {
         }
     }
 
+    my $formats = do { 
+        my ($file) = grep { -f $_ } ("formats.json", "/srv/$NAME/formats.json");
+        local (@ARGV, $/) = ($file);
+        JSON->new->decode(<>);
+    };
+
     # build middleware stack
     $self->{app} = builder {
         enable_if { $self->{TRUST} } 'XForwardedFor',
@@ -79,7 +44,7 @@ sub prepare_app {
         enable 'Static', path => qr{\.(html|js|ico|css|png)},
             pass_through => 1, root => './htdocs';
         Plack::App::Converter->new( 
-            formats => $FORMATS 
+            formats => $formats
         );
     };
 }    

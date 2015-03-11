@@ -1,8 +1,41 @@
-package GBV::App::GNDMARConvert::Decoder;
-use v5.14.1;
+package GBV::MARC::Decoder;
+use v5.14;
 
 use parent 'Exporter';
-our @EXPORT = qw(decode_marc);
+
+our @EXPORT = qw(decode_marc marc_fields marc_subfield);
+
+# get first set of fields with same tag
+sub marc_fields {
+    my ($record, @fields) = @_;
+
+    $record = $record->{record};
+    @fields = map { qr{$_} } @fields;
+
+    my @result;
+    for my $field (@fields) {
+        for my $var (@$record) {
+            next if $var->[0] !~ $field;
+            push @result, $var;
+            last unless wantarray;
+        }
+        last if @result;
+    }
+    return @result;
+}
+
+# get first (!) subfield
+sub marc_subfield {
+    my ($subfield, @fields) = @_;
+    for my $field (@fields) {
+        for (my $i=3; $i<@$field; $i+=2) {
+            if ($field->[$i] eq $subfield) {
+                return $field->[$i+1];
+            }
+        }
+    }        
+}
+
 
 sub decode_marc {
     decode(undef, shift, '001');

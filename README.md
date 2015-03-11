@@ -17,6 +17,12 @@ The application is automatically started as service, listening on port 6100.
 
 The main page on <http://localhost:6100/> provides API documentation.
 
+The command line client `gbvconvert` can also be used without installation:
+
+    git clone https://github.com/gbv/gndmarconvert.git
+    carton install 
+    ./bin/gbvconvert -f marcxml -t json some-marc-file.xml
+
 # INSTALLATION
 
 The application is packaged as Debian package. No binaries are included, so the
