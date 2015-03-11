@@ -4,6 +4,10 @@ use v5.14;
 use GBV::App::Convert::MARC2JSON qw(marc2json);
 use JSON;
 
+# MARCXML records with GND data (as documented
+# <a href="http://www.dnb.de/DE/Standardisierung/Formate/MARC21/marc21_node.html">at DNB</a>
+# and <a href="http://www.loc.gov/marc/authority/">at LoC</a>)
+
 sub convert {
     my ($files, %options) = @_;
     my ($filename) = values %$files;

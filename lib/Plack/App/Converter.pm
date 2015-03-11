@@ -19,9 +19,8 @@ sub prepare_app {
         $self->{formats}->{$_}->{name} = $_;
         if ( my $target = delete $self->{formats}->{$_}->{target} ) {
             $self->{conversions}->{$_} = $target;
-            $self->{formats}->{$_}->{target} = keys [ %$target ];
+            $self->{formats}->{$_}->{target} = [ keys %$target ];
 
-            #$conversion = eval {
             while (my($key,$value) = each %$target) {
                 Plack::Util::load_class($value);
                 no strict 'refs';
@@ -31,13 +30,13 @@ sub prepare_app {
     }
 
     # List of formats in JSON
-    my $FORMATS = JSON->new->pretty->encode($self->{formats});
+    my $formats = JSON->new->pretty->encode($self->{formats});
 
     $self->{app} = builder {
         enable 'ContentLength';
         builder {
             mount '/formats' => sub {
-                [ 200, [ 'Content-Type' => 'application/json' ], [ $FORMATS ] ];
+                [ 200, [ 'Content-Type' => 'application/json' ], [ $formats ] ];
             };
             mount '/convert' => sub { $self->convert(@_) };
             mount '/' => sub { [404,[],['Not Found']] };

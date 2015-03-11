@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GNDMARConvert</title>
+    <title>Converter Webservice</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -13,14 +13,7 @@
     <![endif]-->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
-    <script type="text/javascript">
-        angular.module('GNDMARConvert',['ui.bootstrap'])
-        .controller('MainController',function($scope) {
-            $scope.baseURL = window.location.href.split('?')[0].split('#')[0];
-            //$scope.outputtype = "application/json";
-            $scope.to = "json-ld";
-        });
-    </script>
+    <script src="converter.js"></script>
     <style type="text/css">
       .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
       code { color: #000; background: none; padding: 0; }
@@ -29,22 +22,15 @@
       .footer { padding-top: 2em; color: #666; }
     </style>
   </head>
-  <body ng-app="GNDMARConvert" ng-controller="MainController">
+  <body ng-app="Converter" ng-controller="MainController">
     <div class="container">
       <div class="page-header">
-        <h1>GNDMARConvert</h1>
-        <p class="lead">MARCXML GND authority record conversion webservice</p>
+        <h1>Converter Webservice</h1>
+        <p class="lead">convert records or files between different formats</p>
       </div>
       <div>
 
         <h2>REST API</h2>
-        <p>
-          The REST API of this webserice can be used to convert
-          <a href="http://www.loc.gov/standards/marcxml/">MARCXML</a>
-          records with GND data (as documented
-          <a href="http://www.dnb.de/DE/Standardisierung/Formate/MARC21/marc21_node.html">at DNB</a>
-          and <a href="http://www.loc.gov/marc/authority/">at LoC</a>.
-        </p>
 
         <h3>List supported formats</h3>
         <p>
@@ -56,8 +42,13 @@
             <div style="word-break: break-all">
               <span class="badge">GET</span>
               <code>{{baseURL}}formats</code>
+              <i ng-click="formatsCollapsed = !formatsCollapsed"
+                 class="indicator glyphicon pull-right 
+                      {{formatsCollapsed ? 'glyphicon-chevron-down' : 'glyphicon-chevron-up' }}"
+              ></i>
             </div>
           </div>
+          <div format-list-from="{{baseURL}}formats" collapse="formatsCollapsed"></div>
         </div>
 
         <h3>Conversion</h3>

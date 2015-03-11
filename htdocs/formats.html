@@ -1,0 +1,25 @@
+<table class="table" ng-if="formats">
+  <thead>
+    <td>name</td>
+    <td>title</td>
+    <td>extension</td>
+    <td>type</td>
+    <td>targets</td>
+  </thead>
+  <tbody>
+    <tr ng-repeat="f in formats">
+      <td><b>{{f.name}}</b></td>
+      <td>
+          <a ng-if="f.docs" href="{{f.docs}}">{{f.title}}</a>
+          <span ng-if="!f.docs">{{f.title}}</span>
+      </td>
+      <td><code>{{f.extension}}</code></td>
+      <td><code>{{f.type}}</code></td>
+      <td>
+          <ul ng-of="f.target" class="list-inline">
+              <li ng-repeat="t in f.target"><b>{{t}}</b></li>
+          </ul>
+      <td>
+    </tr>
+  </tbody>
+</table>
