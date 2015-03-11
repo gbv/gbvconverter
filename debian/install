@@ -1,8 +1,8 @@
-app.psgi            srv/gndmarconvert
-formats.json        srv/gndmarconvert
-lib/*               srv/gndmarconvert/lib
-cpanfile            srv/gndmarconvert
-cpanfile.snapshot   srv/gndmarconvert
-local/*             srv/gndmarconvert/local
-htdocs/*            srv/gndmarconvert/htdocs
+app.psgi            srv/gbvconverter
+formats.json        srv/gbvconverter
+lib/*               srv/gbvconverter/lib
+cpanfile            srv/gbvconverter
+cpanfile.snapshot   srv/gbvconverter
+local/*             srv/gbvconverter/local
+htdocs/*            srv/gbvconverter/htdocs
 bin/*               usr/bin

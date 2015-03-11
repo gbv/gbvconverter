@@ -1,8 +1,8 @@
-package GBV::App::GNDMARConvert;
+package GBV::App::Converter;
 use v5.14.1;
 
 our $VERSION="0.0.0";
-our $NAME="gndmarconvert";
+our $NAME="gbvconverter";
 
 use parent 'Plack::App::Converter';
 

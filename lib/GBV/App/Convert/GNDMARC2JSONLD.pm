@@ -14,6 +14,8 @@ sub convert {
 
     my $json = marc2json($filename);
 
+    # TODO: execute conversion
+    
     return [ JSON->new->utf8->pretty->encode($json) ];
 }
 
@@ -102,8 +104,3 @@ sub prefLabel {
     # TODO: more subfields
     return marc_subfield('a', $fields[0]);
 }
-
-
-__END__
-USAGE:
-  ./bin/gndmarconvert -o json $MARCXMLDATEI

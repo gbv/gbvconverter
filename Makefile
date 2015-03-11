@@ -7,7 +7,7 @@ DEPENDS:=$(shell perl -ne 'print $$1 if /^Depends:\s+(.+)/;' < debian/control)
 DEPLIST:=$(shell echo "$(DEPENDS)" | perl -pe 's/(\s|,|[$(POPEN)].+?[$(PCLOSE)])+/ /g')
 ARCH   :=$(shell perl -ne 'print $$1 if /^Architecture:\s+(.+)/;' < debian/control)
 RELEASE:=${PACKAGE}_${VERSION}_${ARCH}.deb
-MAINSRC:=lib/GBV/App/SeeAlso.pm
+MAINSRC:=lib/GBV/App/GBVConverter.pm
 
 info:
 	@echo "Release: $(RELEASE)"
@@ -34,7 +34,6 @@ release-file: documentation version
 	carton exec prove -Ilib
 	dpkg-buildpackage -b -us -uc -rfakeroot
 	mv ../$(PACKAGE)_$(VERSION)_*.deb .
-	git diff-index HEAD # FIXME?
 
 # do cleanup
 debian-clean:

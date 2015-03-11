@@ -1,0 +1,22 @@
+{
+    "marcxml": { 
+        "type": "application/marcxml+xml",
+        "title": "MARCXML",
+        "docs": "http://www.loc.gov/standards/marcxml/",
+        "extension": "xml",
+        "target": {
+            "json":    "GBV::App::Convert::MARC2JSON",
+            "json-ld": "GBV::App::Convert::GNDMARC2JSONLD"
+        }
+    },
+    "json": {
+        "type": "application/json",
+        "title": "JSON",
+        "extension": "json"
+    },
+    "json-ld": {
+        "type": "application/ld+json",
+        "title": "JSON-LD",
+        "extension": "json"
+    }
+}

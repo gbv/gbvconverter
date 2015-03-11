@@ -1,12 +1,12 @@
-Source: gndmarconvert
+Source: gbvconverter
 Section: misc
 Priority: extra
 Maintainer: Jakob Voss <jakob.voss@gbv.de>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.2
 
-Package: gndmarconvert
+Package: gbvconverter
 Architecture: amd64
 Depends: perl-modules (>= 5.14.1), cpanminus, starman, libjson-perl, libmarc-xml-perl
 Recommends: carton
-Description: MARCXML GND authority record conversion webservice
+Description: Record or file conversion webservice

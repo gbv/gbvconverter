@@ -1,11 +1,11 @@
-.TH "GNDMARCONVERT" "1" "" "Manual" ""
+.TH "GBVCONVERTER" "1" "" "Manual" ""
 .SH NAME
 .PP
-gndmarconvert \- MARCXML GND authority record conversion webservice
+gbvconverter \- MARCXML GND authority record conversion webservice
 .SH DESCRIPTION
 .PP
-\f[B]gndmarconvert\f[] provides a webservice to convert MARCXML
-authority records of GND.
+\f[B]gbvconverter\f[] provides a webservice to convert MARCXML authority
+records of GND.
 .SH SYNOPSIS
 .PP
 The application is automatically started as service, listening on port
@@ -13,11 +13,22 @@ The application is automatically started as service, listening on port
 .IP
 .nf
 \f[C]
-sudo\ service\ gndmarconvert\ {status|start|stop|restart}
+sudo\ service\ gbvconverter\ {status|start|stop|restart}
 \f[]
 .fi
 .PP
 The main page on <http://localhost:6100/> provides API documentation.
+.PP
+The command line client \f[C]gbvconvert\f[] can also be used without
+installation:
+.IP
+.nf
+\f[C]
+git\ clone\ https://github.com/gbv/gbvconverter.git
+carton\ install\ 
+\&./bin/gbvconvert\ \-f\ marcxml\ \-t\ json\ some\-marc\-file.xml
+\f[]
+.fi
 .SH INSTALLATION
 .PP
 The application is packaged as Debian package.
@@ -27,16 +38,16 @@ It is tested with Ubuntu 12.04 LTS.
 .PP
 Files are installed at the following locations:
 .IP \[bu] 2
-\f[C]/srv/gndmarconvert/\f[] \- application
+\f[C]/srv/gbvconverter/\f[] \- application
 .IP \[bu] 2
-\f[C]/var/log/gndmarconvert/\f[] \- log files
+\f[C]/var/log/gbvconverter/\f[] \- log files
 .IP \[bu] 2
-\f[C]/etc/default/gndmarconvert\f[] \- server configuration
+\f[C]/etc/default/gbvconverter\f[] \- server configuration
 .IP \[bu] 2
-\f[C]/etc/gndmarconvert\f[] \- application configuration
+\f[C]/etc/gbvconverter\f[] \- application configuration
 .SH CONFIGURATION
 .PP
-See \f[C]/etc/default/gndmarconvert\f[] for basic configuration.
+See \f[C]/etc/default/gbvconverter\f[] for basic configuration.
 Settings are not modified by updates.
 Restart is needed after changes.
 Only simple key value\-pairs are allowed with the following keys:
@@ -55,12 +66,12 @@ header.
 The special value \f[C]*\f[] can be used to trust all IPs.
 .PP
 The HTML client can be customized by putting static files into directory
-\f[C]/etc/gndmarconvert/htdocs\f[] to override files in
-\f[C]/srv/gndmarconvert/htdocs\f[].
+\f[C]/etc/gbvconverter/htdocs\f[] to override files in
+\f[C]/srv/gbvconverter/htdocs\f[].
 .SH SEE ALSO
 .PP
 Changelog is located in \f[C]debian/changelog\f[] in the source code
 repository.
 .PP
-Source code and issue tracker at <https://github.com/gbv/gndmarconvert>.
+Source code and issue tracker at <https://github.com/gbv/gbvconverter>.
 See file \f[C]CONTRIBUTING.md\f[] for details.
